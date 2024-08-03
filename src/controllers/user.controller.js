@@ -1,5 +1,6 @@
 import { User } from "../Models/User.module.js";
 import bcryjs from "bcryptjs"
+import jwt from "jsonwebtoken"
 
 // EndPoint for Registering User
 async function userRegister(req, res) {
@@ -35,14 +36,39 @@ async function userRegister(req, res) {
 // EndPoint for handling user Login the 
 async function userLogin(req, res) {
    let logUser = req.body;
-
+//    console.log(`Input Password ${logUser.password}`);
    try {
-    let myUser = await (await User.find({email : logUser.email}))
+     const myUser = await User.findOne({email : logUser.email})
+    //  console.log(myUser.password);
+     
 
     if(!myUser){
         res.status(404).send({message : "User Does not Found"})
     }else{
-        res.status(200).send({message : "User Found",data : myUser})
+        // res.status(200).send({message : "User Found",data : myUser})
+
+        // Check the password which are stored in db and 
+        // The password we get from the user
+        bcryjs.compare(String(logUser.password),myUser.password,(error,result)=>{
+            // Send Jwt headers in cookies  ---Todo
+            if(result==true){
+            //    res.status(200).send({message : "Login Successful"}) 
+            // generate and send jwt access token to the user
+            // when it first time login
+            // By default the algorithm are RS256 we need to provide algorithm 
+            // For generating access token
+               jwt.sign({email : myUser.email},`${process.env.ACCESS_TOKEN_SECRET}`,(error,token)=>{
+                if(!error){
+                    res.send({message : "Login Successful", token : token})
+                }
+               })
+            }
+            else{
+                // For in correct input send 401 status code
+                res.status(403).send({message : "Incorrect Password"})
+                // console.log('Error : ' ,error.message); 
+            }
+        })
     }
 
    } catch (error) {

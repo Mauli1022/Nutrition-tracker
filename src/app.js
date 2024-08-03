@@ -10,7 +10,11 @@ app.use(express.urlencoded({extended : true, limit : "20kb"}))
 
 // import Routes:
 import userRoute from "./routes/user.route.js"
+import foodRoute from "./routes/food.route.js"
 
 // Route declaration 
 app.use("/api",userRoute)
+app.use("/api",foodRoute)
+
+
 export { app }
