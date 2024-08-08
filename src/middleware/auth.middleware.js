@@ -14,7 +14,6 @@ export function verifyToken(req,res,next){
         })
 
         
-        
     }else{
         // Use 401 status code for not getting the valid credential(information) like access token
         res.status(401).send({message : "Please Send a Token"})

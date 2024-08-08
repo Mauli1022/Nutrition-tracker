@@ -40,4 +40,4 @@ export const Food = mongoose.models.Food || mongoose.model("Food",foodSchema)
       "carbohydrates": 22
  */
 
-    //   Todo : Create end point for creating a new Food
+//   Todo : Create end point for creating a new Food
