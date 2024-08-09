@@ -5,6 +5,6 @@ import { verifyToken } from "../middleware/auth.middleware.js"
 const trakingRoute = Router()
 
 trakingRoute.route("/trakfood").post(verifyToken,TrakingFood)
-trakingRoute.route("/fetchfood/:userId").get(verifyToken,fetchFoodEatenByUser)
+trakingRoute.route("/fetchfood/:userId/:date").get(verifyToken,fetchFoodEatenByUser)
 
 export default trakingRoute 

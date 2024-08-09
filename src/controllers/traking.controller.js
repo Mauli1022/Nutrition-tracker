@@ -1,6 +1,5 @@
 import { Traking } from "../models/Traking.model.js";
 
-
 async function TrakingFood(req,res) {
     
     let trakData = req.body;
@@ -20,13 +19,20 @@ async function fetchFoodEatenByUser(req,res) {
     // res.send("Food Eaten By Person")
 
     let userID = req.params.userId;
-   
-    // console.log(userID);
+    let date = new Date(req.params.date);
+    let strDate = date.getDate()+"/"+(date.getMonth()+1)+"/"+date.getFullYear();
+    // console.log(strDate,date,new Date(req.params.date).getDay());
+    
     
     try {
-        let data = await Traking.find({userId : userID})
+        let data = await Traking.find({userId : userID,eatenDate : strDate})
         .populate("userId").populate("foodId")
-        res.status(200).send({data : data})
+
+        if(data.length === 0){
+            res.status(200).send({message : "Food Not Added"})
+        }else{
+            res.status(200).send({data : data})
+        }
     } catch (error) {
         res.status(500).send({message : "Some Problem in Getting the Food"})
         console.log(`Fetch Food Eaten By User : ${error.message}`);
@@ -35,3 +41,6 @@ async function fetchFoodEatenByUser(req,res) {
 } 
 
 export {TrakingFood,fetchFoodEatenByUser}
+
+// Date Format : 
+//  MM/DD/YYYY
